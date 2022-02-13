@@ -28,15 +28,19 @@ class QuestionDAO:
         return d
 
     # return dict [ {'question_id': 質問番号, 'question': 質問内容'},{......}]
-    def findAll(self):
+    def find_question(self, question_number):
         conn = sqlite3.connect('sample.db')
         # row_factoryの変更(dict_factoryに変更)
         conn.row_factory = self.dict_factory
 
         c = conn.cursor()
-        c.execute("SELECT * FROM question_list")
+        c.execute(f"SELECT * FROM question_list where question_id = {question_number}")
 
         question_dict = c.fetchall()
         conn.close()
         return question_dict
 
+
+instance = QuestionDAO()
+result = instance.find_question(6)
+print(result)
