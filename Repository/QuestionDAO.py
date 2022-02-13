@@ -2,23 +2,47 @@
 質問の内容を管理するクラス
 """
 import sqlite3
+import uuid
 
 
 class QuestionDAO:
     def __init__(self):
         print(" ")
 
-    # def insert(self, question):  # question:質問内容
-    #     # 接続。なければDBを作成する。
-    #     conn = sqlite3.connect('sample.db')
-    #     # カーソルを取得
-    #     c = conn.cursor()
-    #     # Insert実行
-    #     c.execute(f"INSERT INTO question_list (question) VALUES ('{question}')")
-    #     # コミット
-    #     conn.commit()
-    #     # コネクションをクローズ
-    #     conn.close()
+    """
+    最初のみ実行するINSERTメソッド
+    @:return game_id
+    """
+
+    def insert_first(self, answer_flag):
+        # 接続。なければDBを作成する。
+        conn = sqlite3.connect('sample.db')
+        # カーソルを取得
+        c = conn.cursor()
+        # UUIDの発行(ランダム)
+        game_id = str(uuid.uuid4());
+        # Insert実行
+        c.execute(f"insert into answer_table values ('{game_id}',1,{answer_flag})")
+        # コミット
+        conn.commit()
+        # コネクションをクローズ
+        conn.close()
+        return game_id
+
+    """
+    2度目以降用のINSERTメソッド
+    """
+
+    def insert_answer(self, game_id, question_number, answer_flag):
+        conn = sqlite3.connect('sample.db')
+        c = conn.cursor()
+        c.execute(f"insert into answer_table values ('{game_id}',{question_number},{answer_flag})")
+        conn.commit()
+        conn.close()
+
+    """
+    後に利用するメソッド
+    """
 
     # dict_factoryの定義
     def dict_factory(self, cursor, row):
@@ -26,6 +50,10 @@ class QuestionDAO:
         for idx, col in enumerate(cursor.description):
             d[col[0]] = row[idx]
         return d
+
+    """
+    質問番号から質問内容を引き出すメソッド
+    """
 
     # return dict [ {'question_id': 質問番号, 'question': 質問内容'},{......}]
     def find_question(self, question_number):
@@ -40,7 +68,17 @@ class QuestionDAO:
         conn.close()
         return question_dict
 
+    # @FIXME:
+    """
+    引数の　game_idから、answer_tableの内容を検索してソートした後に、辞書型に変換して返す（find_questionを参考にどうぞ）
+    @:param game_id
+    @:return answer_dict
+    """
+
+    def find_answer(self, game_id):
+        answer_dict = []
+        return answer_dict
+
 
 instance = QuestionDAO()
-result = instance.find_question(6)
-print(result)
+result = instance.insert_first(False)
