@@ -1,4 +1,1 @@
 flask
-sqlite3
-libsqlite3-dev
-libsqlite3
