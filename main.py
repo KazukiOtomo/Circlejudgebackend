@@ -11,6 +11,7 @@ def hello():
     return jsonify({'message': 'hello'})
 
 
+
 ## エンドポイント
 @app.route('/start', methods=['GET','POST'])
 def start():
