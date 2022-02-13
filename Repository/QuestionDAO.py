@@ -14,19 +14,9 @@ class QuestionDAO:
     @:return game_id
     """
 
-    def insert_first(self, answer_flag):
-        # 接続。なければDBを作成する。
-        conn = sqlite3.connect('sample.db')
-        # カーソルを取得
-        c = conn.cursor()
+    def get_game_id(self):
         # UUIDの発行(ランダム)
-        game_id = str(uuid.uuid4());
-        # Insert実行
-        c.execute(f"insert into answer_table values ('{game_id}',1,{answer_flag})")
-        # コミット
-        conn.commit()
-        # コネクションをクローズ
-        conn.close()
+        game_id = str(uuid.uuid4())
         return game_id
 
     """
@@ -79,6 +69,3 @@ class QuestionDAO:
         answer_dict = []
         return answer_dict
 
-
-instance = QuestionDAO()
-result = instance.insert_first(False)

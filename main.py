@@ -3,6 +3,8 @@ import requests
 import json
 import os
 
+from Repository.QuestionDAO import QuestionDAO
+
 app = Flask(__name__)
 
 
@@ -14,7 +16,9 @@ def hello():
 ## エンドポイント
 @app.route('/start', methods=['GET','POST'])
 def start():
-    return jsonify({'message': 'start'})
+    instance = QuestionDAO()
+    game_id = instance.get_game_id()
+    return jsonify({'game_id': game_id})
 
 
 @app.route('/question', methods=['GET','POST'])
@@ -27,7 +31,7 @@ def question():
     return jsonify({'game_id': game_id, 'question_id': question_id})
 
 
-@app.route('/hello/answer', methods=['GET','POST'])
+@app.route('/question/answer', methods=['GET','POST'])
 def question_answer():
     if not requests.json:
         return make_response('', 400)
