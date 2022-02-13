@@ -6,11 +6,6 @@ import os
 app = Flask(__name__)
 
 
-@app.route('/')
-def index():
-    return render_template('index.html')  # templatesフォルダ内のindex.htmlを表示する
-
-
 @app.route('/hello')
 def hello():
     return jsonify({'message': 'hello'})
