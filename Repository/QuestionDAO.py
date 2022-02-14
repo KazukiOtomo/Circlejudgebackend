@@ -58,14 +58,20 @@ class QuestionDAO:
         conn.close()
         return question_dict
 
-    # @FIXME:
     """
     引数の　game_idから、answer_tableの内容を検索してソートした後に、辞書型に変換して返す（find_questionを参考にどうぞ）
     @:param game_id
     @:return answer_dict
     """
-
     def find_answer(self, game_id):
-        answer_dict = []
+        conn = sqlite3.connect('sample.db')
+        conn.row_factory = self.dict_factory
+        c = conn.cursor()
+
+        c.execute(f"SELECT * FROM answer_table where game_id = '{game_id}'")
+        answer_dict = c.fetchall()
+        conn.close()
         return answer_dict
 
+instance = QuestionDAO()
+print(instance.find_answer('314b8c3b-7dc3-479a-906d-8be9a8bcda4b'))
