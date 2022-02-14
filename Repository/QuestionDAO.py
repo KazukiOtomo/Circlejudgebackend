@@ -15,8 +15,17 @@ class QuestionDAO:
     """
 
     def get_game_id(self):
-        # UUIDの発行(ランダム)
-        game_id = str(uuid.uuid4())
+        conn = sqlite3.connect('sample.db')
+        c = conn.cursor()
+        # UUIDが被らなくなるまでループ
+        while(True):
+            # UUIDの発行(ランダム)
+            game_id = str(uuid.uuid4())
+            dupli_flag = c.execute(f"select * from answer_table where game_id = '{game_id}'")
+            # SELECE文に引っかからない ＝ dupli_flagはNone
+            if dupli_flag.fetchone() == None:
+                break
+        conn.close()
         return game_id
 
     """
@@ -33,7 +42,6 @@ class QuestionDAO:
     """
     後に利用するメソッド
     """
-
     # dict_factoryの定義
     def dict_factory(self, cursor, row):
         d = {}
@@ -63,6 +71,7 @@ class QuestionDAO:
     @:param game_id
     @:return answer_dict
     """
+
     def find_answer(self, game_id):
         conn = sqlite3.connect('sample.db')
         conn.row_factory = self.dict_factory
@@ -74,4 +83,4 @@ class QuestionDAO:
         return answer_dict
 
 instance = QuestionDAO()
-print(instance.find_answer('314b8c3b-7dc3-479a-906d-8be9a8bcda4b'))
+print(instance.get_game_id())
