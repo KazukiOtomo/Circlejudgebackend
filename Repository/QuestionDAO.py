@@ -4,7 +4,6 @@
 import sqlite3
 import uuid
 
-
 class QuestionDAO:
     def __init__(self):
         print(" ")
@@ -15,7 +14,7 @@ class QuestionDAO:
     """
 
     def get_game_id(self):
-        conn = sqlite3.connect('sample.db')
+        conn = sqlite3.connect('./sample.db')
         c = conn.cursor()
         # UUIDが被らなくなるまでループ
         while(True):
@@ -73,7 +72,7 @@ class QuestionDAO:
     """
 
     def find_answer(self, game_id):
-        conn = sqlite3.connect('sample.db')
+        conn = sqlite3.connect('./sample.db')
         conn.row_factory = self.dict_factory
         c = conn.cursor()
 
@@ -82,5 +81,39 @@ class QuestionDAO:
         conn.close()
         return answer_dict
 
+    """
+    引数の　question_idから、point_ruleを検索して、辞書型に変換して返す
+    @:param question_id
+    @:return answer_dict
+    """
+    def find_point_rule(self,question_id):
+        conn = sqlite3.connect('./sample.db')
+        conn.row_factory = self.dict_factory
+        c = conn.cursor()
+        c.execute(f"SELECT * FROM point_rule where question_id = '{question_id}'")
+        answer_dict = c.fetchall()
+        conn.close()
+        return answer_dict
+
+
+# 以下開発実験用コード
+game_id = '314b8c3b-7dc3-479a-906d-8be9a8bcda4b'
 instance = QuestionDAO()
-print(instance.get_game_id())
+answerInstance = instance.find_answer(game_id)
+numberOfAnswer = len(answerInstance)
+pointList = [0,0,0,0,0,0,0,0]
+for i in range(0,numberOfAnswer):
+    answerList = answerInstance.pop(0)
+    question_id = answerList.get("question_id")
+    answer = answerList.get("answer")
+    pointRuleIncetance = instance.find_point_rule(question_id)
+    pointRuleList = pointRuleIncetance.pop(0)
+    for j in range(1,9):
+        cicle_id = "cicle_"+str(j)
+        if(pointRuleList.get(cicle_id)==answer):
+            print("true")
+            tmp = pointList[j-1]
+            pointList[j-1] = tmp+1
+        else:
+            print("false")
+print(pointList)
