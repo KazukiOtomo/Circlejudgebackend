@@ -111,8 +111,17 @@ class QuestionDAO:
         return 0
 
     """
-    指定された番号に紐づくサークル名を取得する
+    circle_listを検索してレコード数（サークル数）を返す
+    @:return answer_dict
     """
+    def get_number_of_circles(self, db_path):
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = self.dict_factory
+        c = conn.cursor()
+        c.execute(f"SELECT COUNT ('circlr_id') FROM circle_list")
+        answer_dict = c.fetchall()
+        conn.close()
+        return answer_dict
 
     def get_circle_name(self, circle_id, db_path):
         conn = sqlite3.connect(db_path)
@@ -122,25 +131,3 @@ class QuestionDAO:
         circle_name = c.fetchone()[0]
         conn.close()
         return circle_name
-
-# # 以下開発実験用コード
-# game_id = '314b8c3b-7dc3-479a-906d-8be9a8bcda4b'
-# instance = QuestionDAO()
-# answerInstance = instance.find_answer(game_id)
-# numberOfAnswer = len(answerInstance)
-# pointList = [0, 0, 0, 0, 0, 0, 0, 0]
-# for i in range(0, numberOfAnswer):
-#     answerList = answerInstance.pop(0)
-#     question_id = answerList.get("question_id")
-#     answer = answerList.get("answer")
-#     pointRuleIncetance = instance.find_point_rule(question_id)
-#     pointRuleList = pointRuleIncetance.pop(0)
-#     for j in range(1, 9):
-#         cicle_id = "cicle_" + str(j)
-#         if (pointRuleList.get(cicle_id) == answer):
-#             print("true")
-#             tmp = pointList[j - 1]
-#             pointList[j - 1] = tmp + 1
-#         else:
-#             print("false")
-# print(pointList)

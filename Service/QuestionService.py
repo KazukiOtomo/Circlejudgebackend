@@ -19,9 +19,11 @@ class calc_point:
         instance = QuestionDAO.QuestionDAO()
         # TODO：sample.dbへの相対パスを指定する
         db_path = './../Repository/sample.db'
-
+        numberOfCircleInstance = instance.get_number_of_circles(db_path)
+        numberOfCircleList = numberOfCircleInstance.pop(0)
         answer_dict = instance.find_answer(game_id, db_path)
-        pointList = [0, 0, 0, 0, 0, 0, 0, 0]
+        numberOfCircle = numberOfCircleList.get("COUNT ('circlr_id')")
+        pointList = [0]*numberOfCircle
         number_of_answer = len(answer_dict)
 
         for i in range(0, number_of_answer):
@@ -31,9 +33,16 @@ class calc_point:
 
             pointRuleIncetance = instance.find_point_rule(question_id, db_path)
             pointRuleList = pointRuleIncetance.pop(0)
-            for j in range(1, 9):
-                cicle_id = "cicle_" + str(j)
+            for j in range(0, numberOfCircle):
+                cicle_id = "cicle_" + str(j+1)
                 if (pointRuleList.get(cicle_id) == answer):
+                    # print("true")
+                    tmp = pointList[j]
+                    pointList[j] = tmp + 1
+
+        for k in range(0, numberOfCircle):
+            tmp = pointList[k]
+            pointList[k] = (tmp/float(number_of_answer))
                     print("true")
                     tmp = pointList[j - 1]
                     pointList[j - 1] = tmp + 1
