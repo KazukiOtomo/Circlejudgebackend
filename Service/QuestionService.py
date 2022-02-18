@@ -52,6 +52,14 @@ class calc_point:
         # ソート前におけるインデックス番号
         print(sort_point_array)
 
+        # とりあえずTOP3の出力
+        first = instance.get_circle_name(sort_point_array[0], db_path)
+        second = instance.get_circle_name(sort_point_array[1], db_path)
+        third = instance.get_circle_name(sort_point_array[2], db_path)
+        print(first)
+        print(second)
+        print(third)
+
 
 """
 テスト用
