@@ -101,6 +101,14 @@ class QuestionDAO:
         answer_dict = c.fetchall()
         conn.close()
         return answer_dict
+    
+    def deleat_gameid(self, game_id, db_path):
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = self.dict_factory
+        c = conn.cursor()
+        c.execute(f"DELETE FROM answer_table WHERE game_id = '{game_id}'")
+        conn.close()
+        return 0
 
 
 # # 以下開発実験用コード
