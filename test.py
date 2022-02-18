@@ -33,6 +33,15 @@ class Test(unittest.TestCase):
         # check result from server with expected data
         print(result.data)
 
+    def test_start(self):
+        # send data as POST form to endpoint
+        sent = {'game_id': 1}
+        result = self.app.post(
+            '/start',
+            data=sent
+        )
+        # check result from server with expected data
+        print(result.data)
 
 if __name__ == '__main__':
     unittest.main()
