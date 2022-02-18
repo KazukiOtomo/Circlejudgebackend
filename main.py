@@ -67,7 +67,13 @@ def end():
         return make_response('', 400)
     body = request.json
     game_id = body['game_id']
-    return jsonify({'game_id': game_id})
+    instance = QuestionDAO()
+    db_path = './Repository/sample.db'
+    try:
+        response = instance.deleat_gameid(game_id, db_path)
+        return jsonify({'message': 'OK'})
+    except:
+        return jsonify({'message': 'ERROR'})
 
 
 if __name__ == '__main__':
