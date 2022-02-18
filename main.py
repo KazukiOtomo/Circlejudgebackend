@@ -4,7 +4,6 @@ from Repository.QuestionDAO import QuestionDAO
 
 app = Flask(__name__)
 
-
 @app.route('/hello')
 def hello():
     return jsonify({'message': 'hello'})
@@ -14,7 +13,8 @@ def hello():
 @app.route('/start', methods=['GET','POST'])
 def start():
     instance = QuestionDAO()
-    game_id = instance.get_game_id()
+    db_path = './Repository/sample.db'
+    game_id = instance.get_game_id(db_path)
     return jsonify({'game_id': game_id})
 
 
@@ -31,6 +31,7 @@ def question():
     game_id = instance.find_question(question_id)
     return jsonify({'game_id': game_id, 'question_id': question_id})
 # curl -X POST -H "Content-Type: application/json" -d '{"question_id":"abfb4da9-fcdb-4951-943f-5d483b079e57", "game_id":"1"}' http://localhost:5000/question
+
 
 @app.route('/question/answer', methods=['GET','POST'])
 def question_answer():
@@ -50,6 +51,7 @@ def result():
     body = request.json
     game_id = body['game_id']
     return jsonify({'game_id': game_id})
+
 
 @app.route('/end', methods=['GET','POST'])
 def end():

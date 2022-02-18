@@ -14,8 +14,8 @@ class QuestionDAO:
     @:return game_id
     """
 
-    def get_game_id(self):
-        conn = sqlite3.connect('./sample.db')
+    def get_game_id(self, db_path):
+        conn = sqlite3.connect(db_path)
         c = conn.cursor()
         while (True):
             # UUIDの発行(ランダム)
@@ -34,8 +34,8 @@ class QuestionDAO:
     2度目以降用のINSERTメソッド
     """
 
-    def insert_answer(self, game_id, question_number, answer_flag):
-        conn = sqlite3.connect('sample.db')
+    def insert_answer(self, game_id, question_number, answer_flag, db_path):
+        conn = sqlite3.connect(db_path)
         c = conn.cursor()
         c.execute(f"insert into answer_table values ('{game_id}',{question_number},{answer_flag})")
         conn.commit()
@@ -57,8 +57,8 @@ class QuestionDAO:
     """
 
     # return dict [ {'question_id': 質問番号, 'question': 質問内容'},{......}]
-    def find_question(self, question_number):
-        conn = sqlite3.connect('sample.db')
+    def find_question(self, question_number, db_path):
+        conn = sqlite3.connect(db_path)
         # row_factoryの変更(dict_factoryに変更)
         conn.row_factory = self.dict_factory
 
@@ -75,10 +75,10 @@ class QuestionDAO:
     @:return answer_dict
     """
 
-    def find_answer(self, game_id, path):
+    def find_answer(self, game_id, db_path):
         # FIXME DBの参照が関数の呼び出した先になってしまう　（Serviceディレクトリ直下にDBファイルが作られてしまったりする）
         # conn = sqlite3.connect('./sample.db')
-        conn = sqlite3.connect(path)
+        conn = sqlite3.connect(db_path)
         conn.row_factory = self.dict_factory
         c = conn.cursor()
 
