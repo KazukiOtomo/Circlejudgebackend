@@ -10,7 +10,7 @@ class QuestionDAO:
         print(" ")
 
     """
-    最初のみ実行するINSERTメソッド
+    最初のみ実行し、game_idを発行する
     @:return game_id
     """
 
@@ -31,7 +31,7 @@ class QuestionDAO:
         return game_id
 
     """
-    2度目以降用のINSERTメソッド
+    回答内容INSERTメソッド
     """
 
     def insert_answer(self, game_id, question_number, answer_flag, db_path):
@@ -102,6 +102,18 @@ class QuestionDAO:
         conn.close()
         return answer_dict
 
+    """
+    指定された番号に紐づくサークル名を取得する
+    """
+
+    def get_circle_name(self, circle_id, db_path):
+        conn = sqlite3.connect(db_path)
+        c = conn.cursor()
+
+        c.execute(f"select circle_name from circle_list where circle_id = {circle_id}")
+        circle_name = c.fetchone()[0]
+        conn.close()
+        return circle_name
 
 # # 以下開発実験用コード
 # game_id = '314b8c3b-7dc3-479a-906d-8be9a8bcda4b'
