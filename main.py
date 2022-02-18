@@ -1,7 +1,4 @@
-from flask import Flask, render_template, jsonify, make_response, request
-import requests
-import json
-import os
+from flask import Flask, jsonify, make_response, request
 
 from Repository.QuestionDAO import QuestionDAO
 

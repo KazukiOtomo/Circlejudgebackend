@@ -1,5 +1,3 @@
-
-
 class CalcPoint:
     x = 6
     ranking = []
