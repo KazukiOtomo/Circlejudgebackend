@@ -43,11 +43,11 @@ class calc_point:
         for k in range(0, numberOfCircle):
             tmp = pointList[k]
             pointList[k] = (tmp/float(number_of_answer))
-                    print("true")
-                    tmp = pointList[j - 1]
-                    pointList[j - 1] = tmp + 1
-                else:
-                    print("false")
+                #     print("true")
+                #     tmp = pointList[j - 1]
+                #     pointList[j - 1] = tmp + 1
+                # else:
+                #     print("false")
 
         # 元の得点リスト
         print(pointList)
