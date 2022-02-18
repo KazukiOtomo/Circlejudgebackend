@@ -10,7 +10,7 @@ class QuestionDAO:
         print(" ")
 
     """
-    最初のみ実行するINSERTメソッド
+    最初のみ実行し、game_idを発行する
     @:return game_id
     """
 
@@ -31,7 +31,7 @@ class QuestionDAO:
         return game_id
 
     """
-    2度目以降用のINSERTメソッド
+    回答内容INSERTメソッド
     """
 
     def insert_answer(self, game_id, question_number, answer_flag, db_path):
@@ -111,9 +111,9 @@ class QuestionDAO:
         return 0
 
     """
-        circle_listを検索してレコード数（サークル数）を返す
-        @:return answer_dict
-        """
+    circle_listを検索してレコード数（サークル数）を返す
+    @:return answer_dict
+    """
     def get_number_of_circles(self, db_path):
         conn = sqlite3.connect(db_path)
         conn.row_factory = self.dict_factory
@@ -122,3 +122,12 @@ class QuestionDAO:
         answer_dict = c.fetchall()
         conn.close()
         return answer_dict
+
+    def get_circle_name(self, circle_id, db_path):
+        conn = sqlite3.connect(db_path)
+        c = conn.cursor()
+
+        c.execute(f"select circle_name from circle_list where circle_id = {circle_id}")
+        circle_name = c.fetchone()[0]
+        conn.close()
+        return circle_name
