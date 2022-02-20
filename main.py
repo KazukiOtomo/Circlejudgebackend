@@ -39,8 +39,12 @@ def question_answer():
         return make_response('', 400)
     body = request.json
     game_id = body['game_id']
+    if not game_id:
+        return make_response('auth error', 400)
     question_id = body['question_id']
     result = body['result']
+    if question_id in [0, 1]:
+        return make_response('"question_id" is 0 or 1.', 400)
     instance = QuestionDAO()
     db_path = './Repository/sample.db'
     try:
@@ -56,6 +60,8 @@ def result():
         return make_response('', 400)
     body = request.json
     game_id = body['game_id']
+    if not game_id:
+        return make_response('auth error', 400)
     instance = QuestionDAO()
     db_path = './Repository/sample.db'
     return jsonify({'game_id': game_id})
@@ -67,6 +73,8 @@ def end():
         return make_response('', 400)
     body = request.json
     game_id = body['game_id']
+    if not game_id:
+        return make_response('auth error', 400)
     instance = QuestionDAO()
     db_path = './Repository/sample.db'
     try:
