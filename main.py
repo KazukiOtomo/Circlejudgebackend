@@ -1,6 +1,7 @@
-from flask import Flask, jsonify, make_response, request
+from flask import Flask, jsonify, make_response, request, render_template
 
 from Repository.QuestionDAO import QuestionDAO
+from Repository.AdminUserDAO import AdminUserDAO
 
 app = Flask(__name__)
 
@@ -8,6 +9,41 @@ app = Flask(__name__)
 def hello():
     return jsonify({'message': 'hello'})
 
+
+# admin
+@app.route('/admin/login')
+def admin_home():
+    return render_template('admin/login.html')
+
+
+@app.route("/admin/home", methods=["POST"])
+def admin_posted():
+    user_id = request.form["user_id"]
+    user_pass = request.form["user_pass"]
+    instance = AdminUserDAO()
+    db_path = './Repository/sample.db'
+    user = instance.find_user(user_id ,user_pass ,db_path)
+    if not user:
+        message = "認証エラー"
+        return render_template('admin/home.html', message=message)
+    else:
+        message = user['user_id']
+        return render_template('admin/home.html', message=message)
+
+
+@app.route("/admin/sql_result", methods=["POST"])
+def admin_sql_result():
+    sql = request.form["sql"]
+    instance = AdminUserDAO()
+    db_path = './Repository/sample.db'
+    sql_result = instance.do_sql(sql ,db_path)
+    message = sql_result['message']
+    result = sql_result['result']
+    keys = sql_result['keys']
+    is_ok = sql_result['is_ok']
+    keys_len = len(keys)
+    result_len = len(result)
+    return render_template('admin/sql_result.html', message=message, result={'is_ok': is_ok,'result_len': result_len,'keys_len': keys_len}, keys=keys, result_list=result)
 
 ## エンドポイント
 @app.route('/start', methods=['GET','POST'])
