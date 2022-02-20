@@ -9,9 +9,37 @@
 <body>
 <div class="main">
     {% if message %}
-        <code>{{message}}</code>
+        <code class="message">{{message}}</code>
     {% endif %}
-    <button class="btn btn-primary" id="go-back">← 戻る</button>
+    {% if result.is_ok == True %}
+        <code>{{result.result}}</code>
+        <hr>
+        <h6>行数 : {{result.result_len}} 行</h6>
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+            <th scope="col">#</th>
+                {% for key in keys %}
+                <th scope="col">{{ key }}</th>
+                {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+          {% for data in result_list %}
+            <tr>
+            <th scope="row">{{ loop.index }}</th>
+              {% for key in keys %}
+                  <td>{{ data[key] }}</td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+    {% elif result.is_ok == False %}
+        {#   nothing     #}
+    {% endif %}
+    <br>
+    <button class="btn btn-primary mt-1" id="go-back">← 戻る</button>
 </div>
 <script>
     document.getElementById('go-back').addEventListener('click', () => {
@@ -39,9 +67,9 @@ body {
   max-width: 630px;
   padding: 15px;
   margin: auto;
-{#    #}
+}
+.message{
     white-space: pre-wrap;
-    color: red;
     overflow-wrap: break-word;
 }
 </style>

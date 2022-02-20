@@ -1,5 +1,5 @@
 """
-質問の内容を管理するクラス
+Adminを管理するクラス
 """
 import sqlite3
 
@@ -23,11 +23,19 @@ class AdminUserDAO:
         conn.row_factory = self.dict_factory
         c = conn.cursor()
         try:
-            c.execute(sql)
-            conn.close()
-            return f"成功 \n Done : {sql}"
+            if 'select' in sql or 'SELECT' in sql:
+                c.execute(sql)
+                result_dict = c.fetchall()
+                conn.close()
+                # keyを取得
+                result_dict_key_list = list(result_dict[0].keys())
+                return {'is_ok': True, 'message': f"成功 \n Done : {sql}", 'result': result_dict, 'keys': result_dict_key_list}
+            else:
+                c.execute(sql)
+                conn.close()
+                return {'is_ok': True, 'message': f"成功 \n Done : {sql}", 'result': [], 'keys': []}
         except Exception as e:
-            return f"失敗 \n ERROR : {e} \n SQL : {sql}"
+            return {'is_ok': False, 'message': f"失敗 \n ERROR : {e} \n SQL : {sql}", 'result': [], 'keys': []}
 
 
 

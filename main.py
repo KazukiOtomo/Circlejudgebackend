@@ -37,8 +37,13 @@ def admin_sql_result():
     instance = AdminUserDAO()
     db_path = './Repository/sample.db'
     sql_result = instance.do_sql(sql ,db_path)
-    message = sql_result
-    return render_template('admin/sql_result.html', message=message)
+    message = sql_result['message']
+    result = sql_result['result']
+    keys = sql_result['keys']
+    is_ok = sql_result['is_ok']
+    keys_len = len(keys)
+    result_len = len(result)
+    return render_template('admin/sql_result.html', message=message, result={'is_ok': is_ok,'result_len': result_len,'keys_len': keys_len}, keys=keys, result_list=result)
 
 ## エンドポイント
 @app.route('/start', methods=['GET','POST'])
