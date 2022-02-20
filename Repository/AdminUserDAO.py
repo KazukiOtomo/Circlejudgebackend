@@ -25,9 +25,9 @@ class AdminUserDAO:
         try:
             c.execute(sql)
             conn.close()
-            return f"Done : {sql}"
+            return f"成功 \n Done : {sql}"
         except Exception as e:
-            return f"ERROR : {e} \n SQL : {sql}"
+            return f"失敗 \n ERROR : {e} \n SQL : {sql}"
 
 
 
