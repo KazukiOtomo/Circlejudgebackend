@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, make_response, request, render_template
+from flask import Flask, jsonify, make_response, request, render_template, redirect
 from flask_cors import CORS
 
 from Repository.QuestionDAO import QuestionDAO
@@ -14,15 +14,18 @@ def hello():
 
 
 # admin
-@app.route('/admin/login')
+@app.route('/admin/login', methods=["GET"])
 def admin_home():
     return render_template('admin/login.html')
 
 
-@app.route("/admin/home", methods=["POST"])
+@app.route("/admin/home", methods=["POST", "GET"])
 def admin_posted():
-    user_id = request.form["user_id"]
-    user_pass = request.form["user_pass"]
+    if request.method == 'POST':
+        user_id = request.form["user_id"]
+        user_pass = request.form["user_pass"]
+    else:
+        return redirect('/admin/login')
     instance = AdminUserDAO()
     db_path = './Repository/sample.db'
     user = instance.find_user(user_id ,user_pass ,db_path)
@@ -34,9 +37,12 @@ def admin_posted():
         return render_template('admin/home.html', message=message)
 
 
-@app.route("/admin/sql_result", methods=["POST"])
+@app.route("/admin/sql_result", methods=["POST", "GET"])
 def admin_sql_result():
-    sql = request.form["sql"]
+    if request.method == 'POST':
+        sql = request.form["sql"]
+    else:
+        return redirect('/admin/login')
     instance = AdminUserDAO()
     db_path = './Repository/sample.db'
     sql_result = instance.do_sql(sql ,db_path)
