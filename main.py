@@ -1,9 +1,12 @@
 from flask import Flask, jsonify, make_response, request, render_template
+from flask_cors import CORS
 
 from Repository.QuestionDAO import QuestionDAO
 from Repository.AdminUserDAO import AdminUserDAO
 
 app = Flask(__name__)
+app.config['JSON_AS_ASCII'] = False
+cors = CORS(app, resources={r"*": {"origins": "*"}})
 
 @app.route('/hello')
 def hello():
