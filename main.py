@@ -29,12 +29,13 @@ def admin_posted():
     instance = AdminUserDAO()
     db_path = './Repository/sample.db'
     user = instance.find_user(user_id ,user_pass ,db_path)
+    table_names = instance.get_tables_name(db_path)
     if not user:
         message = "認証エラー"
         return render_template('admin/home.html', message=message)
     else:
         message = user['user_id']
-        return render_template('admin/home.html', message=message)
+        return render_template('admin/home.html', message=message, table_names=table_names)
 
 
 @app.route("/admin/sql_result", methods=["POST", "GET"])
