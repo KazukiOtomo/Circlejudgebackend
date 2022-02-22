@@ -4,6 +4,10 @@ Adminを管理するクラス
 from msilib.schema import tables
 import sqlite3
 
+from peewee import *
+from peewee import IndexMetadata
+from playhouse.dataset import DataSet
+from playhouse.migrate import migrate
 
 class AdminUserDAO:
     def __init__(self):
@@ -52,6 +56,19 @@ class AdminUserDAO:
         conn.close()
         table_name_list.sort()
         return table_name_list
+
+    
+    def get_indexes(self, table, db_path):
+        dataset = DataSet(db_path)
+        return dataset._database.get_indexes(table)
+
+    def get_columns(self, table, db_path):
+        dataset = DataSet(db_path)
+        return dataset._database.get_columns(table)
+
+    # def get_foreign_keys(self, table, db_path):
+    #     dataset = DataSet(db_path)
+    #     return dataset._database.get_foreign_keys(table)
 
     # dict_factoryの定義
     def dict_factory(self, cursor, row):

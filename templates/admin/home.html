@@ -30,95 +30,153 @@
       <div class="mb-3">
         <a href="/admin/login">ログアウト</a>
       </div>
-      <form action="/admin/sql_result" method="POST">
-        <textarea
-          class="form-control"
-          id="sql_textarea"
-          rows="10"
-          type="text"
-          name="sql"
-          placeholder="SQL"
-        ></textarea>
-        <!--  -->
-        <div class="container mt-2">
-          <div class="row row-cols-auto">
-            <div class="col">
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="flexRadioDefault"
-                  id="flexRadioDefault1"
-                  value="DELETE"
-                />
-                <label class="form-check-label" for="flexRadioDefault1">
-                  DELETE
-                </label>
+      <div class="mb-4">
+        <form action="/admin/sql_result" method="POST">
+          <textarea
+            class="form-control"
+            id="sql_textarea"
+            rows="4"
+            type="text"
+            name="sql"
+            placeholder="SQL"
+          ></textarea>
+          <!--  -->
+          <input
+            type="hidden"
+            name="user_pass"
+            value="{{ user_info.user_pass }}"
+          />
+          <input type="hidden" name="user_id" value="{{ user_info.user_id }}" />
+          <!--  -->
+          <div class="container mt-2">
+            <div class="row row-cols-auto">
+              <div class="col">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="flexRadioDefault"
+                    id="flexRadioDefault1"
+                    value="DELETE"
+                  />
+                  <label class="form-check-label" for="flexRadioDefault1">
+                    DELETE
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="flexRadioDefault"
+                    id="flexRadioDefault2"
+                    value="SELECT"
+                    checked
+                  />
+                  <label class="form-check-label" for="flexRadioDefault2">
+                    SELECT
+                  </label>
+                </div>
               </div>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="flexRadioDefault"
-                  id="flexRadioDefault2"
-                  value="SELECT"
-                  checked
-                />
-                <label class="form-check-label" for="flexRadioDefault2">
-                  SELECT
-                </label>
+              <div class="col">
+                <div class="btn-group mt-2">
+                  <button
+                    type="button"
+                    class="btn btn-secondary dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    テーブルを選択
+                  </button>
+                  <ul class="dropdown-menu">
+                    {% for tbl_name in table_names %}
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        href="#"
+                        onclick="appendText(this.text)"
+                        >{{ tbl_name }}</a
+                      >
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
               </div>
-            </div>
-            <div class="col">
-              <div class="btn-group mt-2">
+              <div class="col">
                 <button
-                  type="button"
-                  class="btn btn-secondary dropdown-toggle"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
+                  id="doSQLBtn"
+                  class="btn btn-primary mt-2"
+                  type="submit"
+                  value="run"
                 >
-                  テーブルを選択
+                  実行
                 </button>
-                <ul class="dropdown-menu">
-                  {% for tbl_name in table_names %}
-                  <li>
-                    <a
-                      class="dropdown-item"
-                      href="#"
-                      onclick="appendText(this.text)"
-                      >{{ tbl_name }}</a
-                    >
-                  </li>
-                  {% endfor %}
-                </ul>
               </div>
-            </div>
-            <div class="col">
-              <button
-                id="doSQLBtn"
-                class="btn btn-primary mt-2"
-                type="submit"
-                value="run"
-              >
-                実行
-              </button>
-            </div>
-            <div class="col">
-              <div class="form-check mt-3" id="checkDoSQL">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  value=""
-                  id="flexCheckDefault"
-                />
-                <label class="form-check-label" for="flexCheckDefault">
-                  本当にテーブルを空にしますか。
-                </label>
+              <div class="col">
+                <div
+                  class="form-check mt-3"
+                  id="checkDoSQL"
+                  style="display: none"
+                >
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="flexCheckDefault"
+                  />
+                  <label class="form-check-label" for="flexCheckDefault">
+                    本当にテーブルを空にしますか。
+                  </label>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
+      <!-- table info -->
+      <hr />
+      <h4 class="mt-4 mb-3"><b>デーブル情報</b></h4>
+      <h5>主キー・複合主キー 🔑</h5>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Columns</th>
+            <th>Unique</th>
+            <th>SQL</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for indexes in indexes_list %}
+          <!--  -->
+          {%for index in indexes %}
+          <tr>
+            <td>{{ index.table }}</td>
+            <td>
+              <ul>
+                {% for column in index.columns %}
+                <li><code>{{ column }}</code></li>
+                {% endfor %}
+              </ul>
+            </td>
+            <td>
+              {% if index.unique %}
+              <span class="glyphicon glyphicon-ok">✅</span>
+              {% endif %}
+            </td>
+            <td>
+              <div>
+                {% if index.sql %}{{ index.sql|format_index|highlight }}{% else
+                %}-- no sql found --{% endif %}
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+          <!--  -->
+          {% endfor %}
+        </tbody>
+      </table>
+      <!--  -->
+      <!--  -->
       {% endif %}
     </div>
     <script
