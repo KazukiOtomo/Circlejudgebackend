@@ -134,50 +134,65 @@
       </div>
       <!-- table info -->
       <hr />
-      <h4 class="mt-4 mb-3"><b>デーブル情報</b></h4>
-      <h5>主キー・複合主キー 🔑</h5>
-      <table class="table table-striped">
+      <h3 class="mt-4 mb-4">デーブル情報 📜</h3>
+      <!--  -->
+      <div class="btn-group mt-1 mb-3">
+        <button
+          type="button"
+          class="btn btn-secondary dropdown-toggle"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          テーブルを選択
+        </button>
+        <ul class="dropdown-menu">
+          {% for tbl_name in table_names %}
+          <li>
+            <a class="dropdown-item" href="#{{ tbl_name }}">{{ tbl_name }}</a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <!--  -->
+      {% for columns in columns_list %}
+      <a
+        href="#{{ columns[0].table }}"
+        id="{{ columns[0].table }}"
+        class="text-decoration-none"
+        ><h4 class="mt-2 mb-0 pb-0">{{ columns[0].table }}</h4></a
+      >
+      <table class="table table-striped table-hover">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Columns</th>
-            <th>Unique</th>
-            <th>SQL</th>
+            <th>カラム名</th>
+            <th>データ型</th>
+            <th>Null 許容</th>
+            <th>主キー・複合主キー</th>
           </tr>
         </thead>
         <tbody>
-          {% for indexes in indexes_list %}
-          <!--  -->
-          {%for index in indexes %}
+          {% for column in columns %}
           <tr>
-            <td>{{ index.table }}</td>
+            <td><code>{{ column.name }}</code></td>
+            <td><code>{{ column.data_type }}</code></td>
             <td>
-              <ul>
-                {% for column in index.columns %}
-                <li><code>{{ column }}</code></li>
-                {% endfor %}
-              </ul>
-            </td>
-            <td>
-              {% if index.unique %}
-              <span class="glyphicon glyphicon-ok">✅</span>
+              {% if column.null %}
+              <span class="glyphicon glyphicon-ok">🆗</span>
               {% endif %}
             </td>
             <td>
-              <div>
-                {% if index.sql %}{{ index.sql|format_index|highlight }}{% else
-                %}-- no sql found --{% endif %}
-              </div>
+              {% if column.primary_key %}
+              <span class="glyphicon glyphicon-ok">🔑</span>
+              {% endif %}
             </td>
           </tr>
           {% endfor %}
-          <!--  -->
-          {% endfor %}
         </tbody>
       </table>
-      <!--  -->
+      {% endfor %}
       <!--  -->
       {% endif %}
+      <p class="mt-5 mb-3 text-muted">© Circlejudge 2022</p>
     </div>
     <script
       type="text/javascript"
