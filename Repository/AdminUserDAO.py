@@ -68,7 +68,6 @@ class AdminUserDAO:
             if 'sqlite_' not in data['name']:
                 table_create_sql_list.append(data['sql'])
         conn.close()
-        table_create_sql_list.sort()
         return table_create_sql_list
 
     
