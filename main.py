@@ -1,3 +1,4 @@
+from operator import index
 from flask import Flask, jsonify, make_response, request, render_template, redirect
 from flask_cors import CORS
 
@@ -29,31 +30,47 @@ def admin_posted():
     instance = AdminUserDAO()
     db_path = './Repository/sample.db'
     user = instance.find_user(user_id ,user_pass ,db_path)
-    table_names = instance.get_tables_name(db_path)
     if not user:
-        message = "認証エラー"
-        return render_template('admin/home.html', message=message)
+        message = '認証エラー'
     else:
         message = user['user_id']
-        return render_template('admin/home.html', message=message, table_names=table_names)
-
+    table_names = instance.get_tables_name(db_path)
+    indexes_list = []
+    columns_list = []
+    for tbl_name in table_names:
+        tbl_key_list = instance.get_indexes(tbl_name, "sqlite:///" + db_path)
+        tbl_col_list = instance.get_columns(tbl_name, "sqlite:///" + db_path)
+        indexes_list.append(tbl_key_list)
+        columns_list.append(tbl_col_list)
+    print(columns_list[0])
+    return render_template('admin/home.html', message=message, user_info={'user_pass': user_pass, 'user_id': user_id},table_names=table_names, indexes_list=indexes_list, columns_list=columns_list)
+    #
 
 @app.route("/admin/sql_result", methods=["POST", "GET"])
 def admin_sql_result():
     if request.method == 'POST':
         sql = request.form["sql"]
+        user_id = request.form["user_id"]
+        user_pass = request.form["user_pass"]
     else:
         return redirect('/admin/login')
     instance = AdminUserDAO()
     db_path = './Repository/sample.db'
-    sql_result = instance.do_sql(sql ,db_path)
-    message = sql_result['message']
-    result = sql_result['result']
-    keys = sql_result['keys']
-    is_ok = sql_result['is_ok']
-    keys_len = len(keys)
-    result_len = len(result)
-    return render_template('admin/sql_result.html', message=message, result={'is_ok': is_ok,'result_len': result_len,'keys_len': keys_len}, keys=keys, result_list=result)
+    user = instance.find_user(user_id ,user_pass ,db_path)
+    if not user:
+        return redirect('/admin/login')
+    else:
+        instance = AdminUserDAO()
+        db_path = './Repository/sample.db'
+        sql_result = instance.do_sql(sql ,db_path)
+        message = sql_result['message']
+        result = sql_result['result']
+        keys = sql_result['keys']
+        is_ok = sql_result['is_ok']
+        keys_len = len(keys)
+        result_len = len(result)
+        return render_template('admin/sql_result.html', message=message, result={'is_ok': is_ok,'result_len': result_len,'keys_len': keys_len}, keys=keys, result_list=result)
+
 
 ## エンドポイント
 @app.route('/start', methods=['GET','POST'])
