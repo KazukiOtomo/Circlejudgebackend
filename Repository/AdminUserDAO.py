@@ -47,15 +47,29 @@ class AdminUserDAO:
         conn = sqlite3.connect(db_path)
         conn.row_factory = self.dict_factory
         c = conn.cursor()
-        c.execute("select name from sqlite_master where type = 'table'")
+        c.execute("select name from sqlite_master where type = 'table' ORDER BY name ASC")
         result_dict = c.fetchall()
         table_name_list = []
         for data in result_dict:
             if 'sqlite_' not in data['name']: 
                 table_name_list.append(data['name'])
         conn.close()
-        table_name_list.sort()
         return table_name_list
+
+    
+    def get_table_create_sql(self, db_path):
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = self.dict_factory
+        c = conn.cursor()
+        c.execute("select * from sqlite_master where type = 'table' ORDER BY name ASC")
+        result_dict = c.fetchall()
+        table_create_sql_list = []
+        for data in result_dict:
+            if 'sqlite_' not in data['name']:
+                table_create_sql_list.append(data['sql'])
+        conn.close()
+        table_create_sql_list.sort()
+        return table_create_sql_list
 
     
     def get_indexes(self, table, db_path):

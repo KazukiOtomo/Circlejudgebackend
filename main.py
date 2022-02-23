@@ -35,6 +35,7 @@ def admin_posted():
     else:
         message = user['user_id']
     table_names = instance.get_tables_name(db_path)
+    create_table_sql_list = instance.get_table_create_sql(db_path)
     indexes_list = []
     columns_list = []
     for tbl_name in table_names:
@@ -42,8 +43,7 @@ def admin_posted():
         tbl_col_list = instance.get_columns(tbl_name, "sqlite:///" + db_path)
         indexes_list.append(tbl_key_list)
         columns_list.append(tbl_col_list)
-    print(columns_list[0])
-    return render_template('admin/home.html', message=message, user_info={'user_pass': user_pass, 'user_id': user_id},table_names=table_names, indexes_list=indexes_list, columns_list=columns_list)
+    return render_template('admin/home.html', message=message, user_info={'user_pass': user_pass, 'user_id': user_id},table_names=table_names, indexes_list=indexes_list, columns_list=columns_list, create_table_sql_list=create_table_sql_list)
     #
 
 @app.route("/admin/sql_result", methods=["POST", "GET"])
