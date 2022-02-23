@@ -134,61 +134,110 @@
       </div>
       <!-- table info -->
       <hr />
-      <h3 class="mt-4 mb-4">デーブル情報 📜</h3>
-      <!--  -->
-      <div class="btn-group mt-1 mb-3">
-        <button
-          type="button"
-          class="btn btn-secondary dropdown-toggle"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          テーブルを選択
-        </button>
-        <ul class="dropdown-menu">
-          {% for tbl_name in table_names %}
-          <li>
-            <a class="dropdown-item" href="#{{ tbl_name }}">{{ tbl_name }}</a>
-          </li>
-          {% endfor %}
-        </ul>
+      <div class="container mt-5 mb-5">
+        <div class="row">
+          <div class="col">
+            <h3>デーブル情報 📜</h3>
+          </div>
+          <div class="col">
+            <div class="btn-group float-end">
+              <button
+                type="button"
+                class="btn btn-secondary dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                テーブルを検索
+              </button>
+              <ul class="dropdown-menu">
+                {% for tbl_name in table_names %}
+                <li>
+                  <a class="dropdown-item" href="#{{ tbl_name }}"
+                    >{{ tbl_name }}</a
+                  >
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% for columns in columns_list %}
+      <div class="container mt-2">
+        <div class="row">
+          <div class="col">
+            <a
+              href="#{{ columns[0].table }}"
+              id="{{ columns[0].table }}"
+              class="text-decoration-none"
+              ><h4 class="mt-2 mb-0 pb-0">{{ columns[0].table }}</h4></a
+            >
+          </div>
+          <div class="col">
+            <div class="float-end">
+              <!-- send sql -->
+              <form action="/admin/sql_result" method="POST">
+                <input
+                  name="sql"
+                  type="hidden"
+                  value="SELECT * FROM {{ columns[0].table }}"
+                />
+                <!-- user info -->
+                <input
+                  type="hidden"
+                  name="user_pass"
+                  value="{{ user_info.user_pass }}"
+                />
+                <input
+                  type="hidden"
+                  name="user_id"
+                  value="{{ user_info.user_id }}"
+                />
+                <!--  -->
+                <button
+                  id="doSQLBtn"
+                  class="btn btn-secondary mt-2"
+                  type="submit"
+                  value="run"
+                >
+                  テーブルを表示
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
       <!--  -->
-      {% for columns in columns_list %}
-      <a
-        href="#{{ columns[0].table }}"
-        id="{{ columns[0].table }}"
-        class="text-decoration-none"
-        ><h4 class="mt-2 mb-0 pb-0">{{ columns[0].table }}</h4></a
-      >
-      <table class="table table-striped table-hover">
-        <thead>
-          <tr>
-            <th>カラム名</th>
-            <th>データ型</th>
-            <th>Null 許容</th>
-            <th>主キー・複合主キー</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for column in columns %}
-          <tr>
-            <td><code>{{ column.name }}</code></td>
-            <td><code>{{ column.data_type }}</code></td>
-            <td>
-              {% if column.null %}
-              <span class="glyphicon glyphicon-ok">🆗</span>
-              {% endif %}
-            </td>
-            <td>
-              {% if column.primary_key %}
-              <span class="glyphicon glyphicon-ok">🔑</span>
-              {% endif %}
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+      <div class="mb-4">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>カラム名</th>
+              <th>データ型</th>
+              <th>Null 許容</th>
+              <th>主キー・複合主キー</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for column in columns %}
+            <tr>
+              <td><code>{{ column.name }}</code></td>
+              <td><code>{{ column.data_type }}</code></td>
+              <td>
+                {% if column.null %}
+                <span class="glyphicon glyphicon-ok">🆗</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if column.primary_key %}
+                <span class="glyphicon glyphicon-ok">🔑</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
       {% endfor %}
       <!--  -->
       {% endif %}
