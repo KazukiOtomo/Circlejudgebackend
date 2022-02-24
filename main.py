@@ -4,6 +4,8 @@ from flask_cors import CORS
 from Repository.QuestionDAO import QuestionDAO
 from Repository.AdminUserDAO import AdminUserDAO
 
+from Service.QuestionService import QuestionService
+
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 cors = CORS(app, resources={r"*": {"origins": "*"}})
@@ -107,9 +109,10 @@ def result():
     game_id = body['game_id']
     if not game_id:
         return make_response('auth error', 400)
-    instance = QuestionDAO()
+    instance = QuestionService()
     db_path = './Repository/sample.db'
-    return jsonify({'game_id': game_id})
+    result_circle_list = instance.calc_point(game_id, db_path)
+    return jsonify({'ranking': result_circle_list})
 
 
 @app.route('/end', methods=['GET','POST'])

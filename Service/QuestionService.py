@@ -1,12 +1,17 @@
 """
 採点・提案する処理の実装クラス
 """
+import sys
+import os
+
 import numpy
 
-from Repository import QuestionDAO
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from Repository.QuestionDAO import QuestionDAO
 
 
-class calc_point:
+class QuestionService:
     def __init__(self):
         print("")
 
@@ -14,11 +19,8 @@ class calc_point:
     DAOクラスの物を切り分け
     """
 
-    def sample(self):
-        game_id = '314b8c3b-7dc3-479a-906d-8be9a8bcda4b'
-        instance = QuestionDAO.QuestionDAO()
-        # TODO：sample.dbへの相対パスを指定する
-        db_path = './../Repository/sample.db'
+    def calc_point(self, game_id, db_path):
+        instance = QuestionDAO()
         numberOfCircleInstance = instance.get_number_of_circles(db_path)
         numberOfCircleList = numberOfCircleInstance.pop(0)
         answer_dict = instance.find_answer(game_id, db_path)
@@ -65,14 +67,9 @@ class calc_point:
         first = instance.get_circle_name(sort_point_array[0], db_path)
         second = instance.get_circle_name(sort_point_array[1], db_path)
         third = instance.get_circle_name(sort_point_array[2], db_path)
-        print(first)
-        print(second)
-        print(third)
 
-
-"""
-テスト用
-"""
-if __name__ == "__main__":
-    instance_calc_point = calc_point()
-    instance_calc_point.sample()
+        # result(main.py)に返す値(list)
+        result_circle_list = []
+        for index in sort_point_array:
+            result_circle_list.append({'name': instance.get_circle_name(sort_point_array[index], db_path)})
+        return 
