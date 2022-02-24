@@ -38,6 +38,18 @@ class AdminUserDAO:
             return {'is_ok': False, 'message': f"失敗 \n ERROR : \n {e} \n SQL : {sql}", 'result': [], 'keys': []}
 
 
+    def get_tables_name(self, db_path):
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = self.dict_factory
+        c = conn.cursor()
+        c.execute("select name from sqlite_master where type = 'table' ORDER BY name ASC")
+        result_dict = c.fetchall()
+        table_name_list = []
+        for data in result_dict:
+            if 'sqlite_' not in data['name']: 
+                table_name_list.append(data['name'])
+        conn.close()
+        return table_name_list
 
     # dict_factoryの定義
     def dict_factory(self, cursor, row):

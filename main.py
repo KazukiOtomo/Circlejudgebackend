@@ -31,22 +31,28 @@ def admin_posted():
     instance = AdminUserDAO()
     db_path = './Repository/sample.db'
     user = instance.find_user(user_id ,user_pass ,db_path)
+    table_names_list = instance.get_tables_name(db_path)
     if not user:
         message = "認証エラー"
         return render_template('admin/home.html', message=message)
     else:
         message = user['user_id']
-        return render_template('admin/home.html', message=message)
+        return render_template('admin/home.html', message=message, table_names=table_names_list, user_info={'user_pass': user_pass, 'user_id': user_id})
 
 
 @app.route("/admin/sql_result", methods=["POST", "GET"])
 def admin_sql_result():
     if request.method == 'POST':
         sql = request.form["sql"]
+        user_id = request.form["user_id"]
+        user_pass = request.form["user_pass"]
     else:
         return redirect('/admin/login')
     instance = AdminUserDAO()
     db_path = './Repository/sample.db'
+    user = instance.find_user(user_id ,user_pass ,db_path)
+    if not user:
+        return redirect('/admin/login')
     sql_result = instance.do_sql(sql ,db_path)
     message = sql_result['message']
     result = sql_result['result']
