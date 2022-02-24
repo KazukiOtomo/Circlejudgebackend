@@ -133,6 +133,7 @@ def result():
     return jsonify({'ranking': result_circle_list})
 
 
+
 @app.route('/end', methods=['GET','POST'])
 def end():
     if not request.json:
