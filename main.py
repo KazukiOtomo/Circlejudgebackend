@@ -1,4 +1,3 @@
-from operator import index
 from flask import Flask, jsonify, make_response, request, render_template, redirect
 from flask_cors import CORS
 

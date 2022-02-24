@@ -1,13 +1,9 @@
 """
 Adminを管理するクラス
 """
-from msilib.schema import tables
 import sqlite3
 
-from peewee import *
-from peewee import IndexMetadata
 from playhouse.dataset import DataSet
-from playhouse.migrate import migrate
 
 class AdminUserDAO:
     def __init__(self):
