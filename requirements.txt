@@ -2,3 +2,4 @@ flask
 Flask-Cors
 gunicorn
 requests
+numpy
