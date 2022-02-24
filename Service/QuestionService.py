@@ -72,4 +72,4 @@ class QuestionService:
         result_circle_list = []
         for index in sort_point_array:
             result_circle_list.append({'name': instance.get_circle_name(sort_point_array[index], db_path)})
-        return 
+        return result_circle_list
