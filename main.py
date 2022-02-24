@@ -32,12 +32,19 @@ def admin_posted():
     db_path = './Repository/sample.db'
     user = instance.find_user(user_id ,user_pass ,db_path)
     table_names_list = instance.get_tables_name(db_path)
+    table_col_info_list = []
+    for table_name in table_names_list:
+        d = instance.get_table_col_info(table_name, db_path)
+        d[0]["table_name"] = table_name
+        create_table_sql = instance.get_table_create_sql(table_name, db_path)
+        d[0]["table_sql"] = create_table_sql[0]['sql']
+        table_col_info_list.append(d)
     if not user:
         message = "認証エラー"
         return render_template('admin/home.html', message=message)
     else:
         message = user['user_id']
-        return render_template('admin/home.html', message=message, table_names=table_names_list, user_info={'user_pass': user_pass, 'user_id': user_id})
+        return render_template('admin/home.html', message=message, table_names=table_names_list, table_col_info_list=table_col_info_list,  user_info={'user_pass': user_pass, 'user_id': user_id})
 
 
 @app.route("/admin/sql_result", methods=["POST", "GET"])

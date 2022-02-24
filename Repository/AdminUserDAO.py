@@ -51,6 +51,25 @@ class AdminUserDAO:
         conn.close()
         return table_name_list
 
+    
+    def get_table_col_info(self, table_name, db_path):
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = self.dict_factory
+        c = conn.cursor()
+        c.execute(f"PRAGMA table_info('{table_name}')")
+        result_dict = c.fetchall()
+        return result_dict
+
+    
+    def get_table_create_sql(self, table_name, db_path):
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = self.dict_factory
+        c = conn.cursor()
+        c.execute(f"select * from sqlite_master where type = 'table' and name='{table_name}'")
+        result_dict = c.fetchall()
+        return result_dict
+
+
     # dict_factoryの定義
     def dict_factory(self, cursor, row):
         d = {}
