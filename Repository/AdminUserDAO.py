@@ -29,13 +29,13 @@ class AdminUserDAO:
                 conn.close()
                 # keyを取得
                 result_dict_key_list = list(result_dict[0].keys())
-                return {'is_ok': True, 'message': f"成功 \n Done : \n {sql}", 'result': result_dict, 'keys': result_dict_key_list}
+                return {'is_ok': True, 'message': f"成功 🎉 \n Done : \n {sql}", 'result': result_dict, 'keys': result_dict_key_list}
             else:
                 c.execute(sql)
                 conn.close()
-                return {'is_ok': True, 'message': f"成功 \n Done : \n {sql}", 'result': [], 'keys': []}
+                return {'is_ok': True, 'message': f"成功 🎉 \n Done : \n {sql}", 'result': [], 'keys': []}
         except Exception as e:
-            return {'is_ok': False, 'message': f"失敗 \n ERROR : \n {e} \n SQL : {sql}", 'result': [], 'keys': []}
+            return {'is_ok': False, 'message': f"失敗 🧨 \n ERROR : \n {e} \n SQL : \n {sql}", 'result': [], 'keys': []}
 
 
     def get_tables_name(self, db_path):
