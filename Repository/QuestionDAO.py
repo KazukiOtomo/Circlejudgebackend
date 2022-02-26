@@ -131,3 +131,8 @@ class QuestionDAO:
         circle_name = c.fetchone()[0]
         conn.close()
         return circle_name
+
+if __name__ == '__main__':
+    instance = QuestionDAO()
+    result = instance.get_number_of_circles('./sample.db')
+    print(result)

@@ -1,0 +1,1 @@
+chmod -R 777 /Repository/sample.db
