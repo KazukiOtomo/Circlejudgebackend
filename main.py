@@ -88,6 +88,7 @@ def question():
         return make_response('', 400)
     body = request.json
     game_id = body['game_id']
+
     if not game_id:
         return make_response('auth error', 400)
     question_id = body['question_id']
@@ -99,15 +100,18 @@ def question():
 
 @app.route('/question/answer', methods=['GET','POST'])
 def question_answer():
+
     if not request.json:
         return make_response('', 400)
     body = request.json
     game_id = body['game_id']
+
     if not game_id:
         return make_response('auth error', 400)
     question_id = body['question_id']
     result = body['result']
-    if question_id in [0, 1]:
+
+    if question_id not in [0, 1]:
         return make_response('"question_id" is 0 or 1.', 400)
     instance = QuestionDAO()
     db_path = './Repository/sample.db'
