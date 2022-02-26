@@ -1,4 +1,7 @@
 import unittest
+
+from flask import jsonify
+
 import main
 import json
 
@@ -22,7 +25,7 @@ class Test(unittest.TestCase):
     #     print(json_data)
     #     assert json_data == None
 
-    def test_main(self):
+    def test_question(self):
         # send data as POST form to endpoint
         sent = {'game_id': 1, 'question_id': 1}
         result = self.app.post(
@@ -31,6 +34,17 @@ class Test(unittest.TestCase):
         )
         # check result from server with expected data
         print(result.data)
+
+    # 回答(result)が0,1以外の時に401エラーが出せればOK
+    def test_question_bad(self):
+        sent = json.dumps({'game_id': 1, 'question_id': 1, 'result': 2})
+        result = self.app.post(
+            'question/answer',
+            data=sent,
+            content_type='application/json'
+        )
+        print(result.status_code)
+        assert result.status_code == 401
 
     def test_start(self):
         # send data as POST form to endpoint
@@ -41,6 +55,7 @@ class Test(unittest.TestCase):
         )
         # check result from server with expected data
         print(result.data)
+
 
 if __name__ == '__main__':
     unittest.main()
