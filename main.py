@@ -6,12 +6,20 @@ from Repository.AdminUserDAO import AdminUserDAO
 
 from Service.QuestionService import QuestionService
 
+import settings
+
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 cors = CORS(app, resources={r"*": {"origins": "*"}})
 
 @app.route('/hello')
 def hello():
+    print(settings.DB_HOST)
+    print(settings.DB_DATABASE)
+    print(settings.DB_PASSWORD)
+    print(settings.DB_PORT)
+    print(settings.DB_USER)
+    print(settings.DB_URI)
     return jsonify({'message': 'hello'})
 
 
