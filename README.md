@@ -10,6 +10,4 @@
 
 [circle_judge](https://github.com/618knot/circle_judge)
 
-### herokuデプロイURL
 
-[URLはこちら](https://circlejudgebackend.herokuapp.com/)
