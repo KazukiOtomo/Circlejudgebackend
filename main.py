@@ -12,14 +12,15 @@ app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 cors = CORS(app, resources={r"*": {"origins": "*"}})
 
+
 @app.route('/hello')
 def hello():
-    print(settings.DB_HOST)
-    print(settings.DB_DATABASE)
-    print(settings.DB_PASSWORD)
-    print(settings.DB_PORT)
-    print(settings.DB_USER)
-    print(settings.DB_URI)
+    # print(settings.DB_HOST)
+    # print(settings.DB_DATABASE)
+    # print(settings.DB_PASSWORD)
+    # print(settings.DB_PORT)
+    # print(settings.DB_USER)
+    # print(settings.DB_URI)
     return jsonify({'message': 'hello'})
 
 
@@ -37,14 +38,13 @@ def admin_posted():
     else:
         return redirect('/admin/login')
     instance = AdminUserDAO()
-    db_path = './Repository/sample.db'
-    user = instance.find_user(user_id ,user_pass ,db_path)
-    table_names_list = instance.get_tables_name(db_path)
+    user = instance.find_user(user_id, user_pass)
+    table_names_list = instance.get_tables_name()
     table_col_info_list = []
     for table_name in table_names_list:
-        d = instance.get_table_col_info(table_name, db_path)
+        d = instance.get_table_col_info(table_name)
         d[0]["table_name"] = table_name
-        create_table_sql = instance.get_table_create_sql(table_name, db_path)
+        create_table_sql = instance.get_table_create_sql(table_name)
         d[0]["table_sql"] = create_table_sql[0]['sql']
         table_col_info_list.append(d)
     if not user:
@@ -52,7 +52,9 @@ def admin_posted():
         return render_template('admin/home.html', message=message)
     else:
         message = user['user_id']
-        return render_template('admin/home.html', message=message, table_names=table_names_list, table_col_info_list=table_col_info_list,  user_info={'user_pass': user_pass, 'user_id': user_id})
+        return render_template('admin/home.html', message=message, table_names=table_names_list,
+                               table_col_info_list=table_col_info_list,
+                               user_info={'user_pass': user_pass, 'user_id': user_id})
 
 
 @app.route("/admin/sql_result", methods=["POST", "GET"])
@@ -64,29 +66,30 @@ def admin_sql_result():
     else:
         return redirect('/admin/login')
     instance = AdminUserDAO()
-    db_path = './Repository/sample.db'
-    user = instance.find_user(user_id ,user_pass ,db_path)
+    user = instance.find_user(user_id, user_pass)
     if not user:
         return redirect('/admin/login')
-    sql_result = instance.do_sql(sql ,db_path)
+    sql_result = instance.do_sql(sql)
     message = sql_result['message']
     result = sql_result['result']
     keys = sql_result['keys']
     is_ok = sql_result['is_ok']
     keys_len = len(keys)
     result_len = len(result)
-    return render_template('admin/sql_result.html', message=message, result={'is_ok': is_ok,'result_len': result_len,'keys_len': keys_len}, keys=keys, result_list=result)
+    return render_template('admin/sql_result.html', message=message,
+                           result={'is_ok': is_ok, 'result_len': result_len, 'keys_len': keys_len}, keys=keys,
+                           result_list=result)
+
 
 ## エンドポイント
-@app.route('/start', methods=['GET','POST'])
+@app.route('/start', methods=['GET', 'POST'])
 def start():
     instance = QuestionDAO()
-    db_path = './Repository/sample.db'
-    game_id = instance.get_game_id(db_path)
+    game_id = instance.get_game_id()
     return jsonify({'game_id': game_id})
 
 
-@app.route('/question', methods=['GET','POST'])
+@app.route('/question', methods=['GET', 'POST'])
 def question():
     if not request.json:
         return make_response('', 400)
@@ -98,12 +101,11 @@ def question():
         return make_response('auth error', 400)
     question_id = body['question_id']
     instance = QuestionDAO()
-    db_path = './Repository/sample.db'
-    response = instance.find_question(question_id, db_path)
+    response = instance.find_question(question_id)
     return jsonify(response)
 
 
-@app.route('/question/answer', methods=['GET','POST'])
+@app.route('/question/answer', methods=['GET', 'POST'])
 def question_answer():
     if not request.json:
         return make_response('not json', 402)
@@ -119,15 +121,14 @@ def question_answer():
     if result not in [0, 1]:
         return make_response('"result" is 0 or 1.', 401)
     instance = QuestionDAO()
-    db_path = './Repository/sample.db'
     try:
-        response = instance.insert_answer(game_id, question_id, result, db_path)
+        response = instance.insert_answer(game_id, question_id, result)
         return jsonify({'message': 'OK'})
     except:
         return jsonify({'message': 'ERROR'})
 
 
-@app.route('/result', methods=['GET','POST'])
+@app.route('/result', methods=['GET', 'POST'])
 def result():
     if not request.json:
         return make_response('not json', 402)
@@ -139,12 +140,11 @@ def result():
         return make_response('auth error', 401)
 
     instance = QuestionService()
-    db_path = './Repository/sample.db'
-    result_circle_list = instance.calc_point(game_id, db_path)
+    result_circle_list = instance.calc_point(game_id)
     return jsonify({'ranking': result_circle_list})
 
 
-@app.route('/end', methods=['GET','POST'])
+@app.route('/end', methods=['GET', 'POST'])
 def end():
     if not request.json:
         return make_response('', 400)
@@ -153,9 +153,8 @@ def end():
     if not game_id:
         return make_response('auth error', 400)
     instance = QuestionDAO()
-    db_path = './Repository/sample.db'
     try:
-        response = instance.deleat_gameid(game_id, db_path)
+        response = instance.deleat_gameid(game_id)
         return jsonify({'message': 'OK'})
     except:
         return jsonify({'message': 'ERROR'})
