@@ -4,3 +4,4 @@ gunicorn
 requests
 numpy
 python-dotenv
+psycopg2
