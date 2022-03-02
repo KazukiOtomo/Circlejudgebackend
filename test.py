@@ -74,16 +74,16 @@ class Test(unittest.TestCase):
         # check result from server with expected data
         print(result.data)
 
-    def test_result(self):
-        sent = json.dumps({'game_id': '314b8c3b-7dc3-479a-906d-8be9a8bcda4b'})
-        result = self.app.post(
-            '/result',
-            data=sent,
-            content_type='application/json'
-        )
-        my_data = result.data.decode().replace("'", '"')
-        data = json.loads(my_data)
-        print(data)
+    # def test_result(self):
+    #     sent = json.dumps({'game_id': '314b8c3b-7dc3-479a-906d-8be9a8bcda4b'})
+    #     result = self.app.post(
+    #         '/result',
+    #         data=sent,
+    #         content_type='application/json'
+    #     )
+    #     my_data = result.data.decode().replace("'", '"')
+    #     data = json.loads(my_data)
+    #     print(data)
 
 
 
