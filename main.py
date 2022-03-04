@@ -58,6 +58,12 @@ def question_answer():
     if result not in [0, 1]:
         return make_response('"result" is 0 or 1.', 401)
     instance = QuestionDAO()
+
+    # question_id を確認する
+    flag = instance.find_question(question_id)
+    if(flag == []):
+        return jsonify({'message': 'Invalid "question_id"'})
+
     try:
         response = instance.insert_answer(game_id, question_id, result)
         return jsonify({'message': 'OK'})
