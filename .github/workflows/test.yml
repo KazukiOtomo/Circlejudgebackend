@@ -24,3 +24,21 @@ jobs:
           DB_PORT: ${{ secrets.DB_PORT }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_URI: ${{ secrets.DB_URI }}
+
+  run-if-failed:
+    runs-on: ubuntu-latest
+    needs: [unittest]
+    if: always() && needs.unittest.result == 'failure'
+    steps:
+      - name: Create comments
+        run: |
+          cat << EOF > comments
+          # Fail
+          ![](https://cho-animedia.jp/imgs/p/4i9dnYHcCN43tBa-eYkdtFrMc8LMwsPExcbH/117731.jpg)
+          EOF
+
+      - name: Post comments
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          URL: ${{ github.event.pull_request.html_url }}
+        run: gh pr comment -F ./comments "${URL}"
