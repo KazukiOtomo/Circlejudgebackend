@@ -1,0 +1,19 @@
+name: Unit-Test
+
+on:
+  pull_request:
+    branches:
+      - heroku_master
+
+jobs:
+  unittest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Python Library
+        run: |
+          sudo pip install -r requirements.txt
+      - name: Test
+        run: |
+          sudo python3 test.py

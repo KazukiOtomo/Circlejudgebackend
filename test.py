@@ -2,12 +2,8 @@
 # -- coding: utf-8 --
 import unittest
 
-from flask_cors import CORS
-
 import main
-from flask import Flask, render_template, jsonify, make_response
 import json
-
 
 
 
