@@ -34,7 +34,7 @@ jobs:
         run: |
           cat << EOF > comments
           # Test Failed
-          ![](https://pbs.twimg.com/media/Eu0iGF7VgAE9KXR.jpg)
+          ![](https://cho-animedia.jp/imgs/p/4i9dnYHcCN43tBa-eYkdtFrMc8LMwsPExcbH/117731.jpg)
           EOF
 
       - name: Post comments
@@ -52,7 +52,7 @@ jobs:
         run: |
           cat << EOF > comments
           # Test Success
-          ![](https://cho-animedia.jp/imgs/p/4i9dnYHcCN43tBa-eYkdtFrMc8LMwsPExcbH/117731.jpg)
+          ![](https://pbs.twimg.com/media/Eu0iGF7VgAE9KXR.jpg)
           EOF
 
       - name: Post comments
