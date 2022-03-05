@@ -25,6 +25,7 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_URI: ${{ secrets.DB_URI }}
 
+
   run-if-failed:
     runs-on: ubuntu-latest
     needs: [unittest]
@@ -33,7 +34,22 @@ jobs:
       - name: Create comments
         run: |
           cat << EOF > comments
-          # Fail
+          # Test Failed
+          ![](https://pbs.twimg.com/media/Eu0iGF7VgAE9KXR.jpg)
+          EOF
+
+      - name: Post comments
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          URL: ${{ github.event.pull_request.html_url }}
+        run: gh pr comment -F ./comments "${URL}"
+    
+    if: always() && needs.unittest.result == 'success'
+    steps:
+      - name: Create comments
+        run: |
+          cat << EOF > comments
+          # Test Success
           ![](https://cho-animedia.jp/imgs/p/4i9dnYHcCN43tBa-eYkdtFrMc8LMwsPExcbH/117731.jpg)
           EOF
 
