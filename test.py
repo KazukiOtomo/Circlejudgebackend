@@ -57,6 +57,7 @@ class Test(unittest.TestCase):
         # 中身見たいとき用
         my_data = result.data.decode().replace("'", '"')
         data = json.loads(my_data)
+        print(data)
         assert data[0]['question'] == '体を動かすことが好きだ'
 
 
