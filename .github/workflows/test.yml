@@ -1,0 +1,62 @@
+name: Unit-Test
+
+on:
+  pull_request:
+    branches:
+      - heroku_master
+
+jobs:
+  unittest:
+    runs-on: ubuntu-latest
+    env:
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_DATABASE: ${{ secrets.DB_DATABASE }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_URI: ${{ secrets.DB_URI }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Python Library
+        run: |
+          sudo pip install -r requirements.txt
+      - name: Test
+        run: |
+          sudo python test.py
+
+  run-if-failed:
+    runs-on: ubuntu-latest
+    needs: [unittest]
+    if: always() && needs.unittest.result == 'failure'
+    steps:
+      - name: Create comments
+        run: |
+          cat << EOF > comments
+          # Test Failed
+          ![](https://cho-animedia.jp/imgs/p/4i9dnYHcCN43tBa-eYkdtFrMc8LMwsPExcbH/117731.jpg)
+          EOF
+
+      - name: Post comments
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          URL: ${{ github.event.pull_request.html_url }}
+        run: gh pr comment -F ./comments "${URL}"
+
+  run-if-success:
+    runs-on: ubuntu-latest
+    needs: [unittest]
+    if: always() && needs.unittest.result == 'success'
+    steps:
+      - name: Create comments
+        run: |
+          cat << EOF > comments
+          # Test Success
+          ![](https://pbs.twimg.com/media/Eu0iGF7VgAE9KXR.jpg)
+          EOF
+
+      - name: Post comments
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          URL: ${{ github.event.pull_request.html_url }}
+        run: gh pr comment -F ./comments "${URL}"

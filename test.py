@@ -2,12 +2,8 @@
 # -- coding: utf-8 --
 import unittest
 
-from flask_cors import CORS
-
 import main
-from flask import Flask, render_template, jsonify, make_response
 import json
-
 
 
 
@@ -51,17 +47,18 @@ class Test(unittest.TestCase):
         print(result.data == b'"result" is 0 or 1.')
         assert result.status_code == 401
 
-    def test_question(self):
-        sent = json.dumps({'game_id': 1, 'question_id': 1})
-        result = self.app.post(
-            '/question',
-            data=sent,
-            content_type='application/json'
-        )
-        # 中身見たいとき用
-        my_data = result.data.decode().replace("'", '"')
-        data = json.loads(my_data)
-        assert data[0]['question'] == '体を動かすことが好きだ'
+    # def test_question(self):
+    #     sent = json.dumps({'game_id': 1, 'question_id': 1})
+    #     result = self.app.post(
+    #         '/question',
+    #         data=sent,
+    #         content_type='application/json'
+    #     )
+    #     # 中身見たいとき用
+    #     my_data = result.data.decode().replace("'", '"')
+    #     data = json.loads(my_data)
+    #     print(data)
+    #     assert data[0]['question'] == '体を動かすことが好きだ'
 
 
     def test_start(self):
