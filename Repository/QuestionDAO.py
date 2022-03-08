@@ -150,15 +150,19 @@ class QuestionDAO:
 
     def get_circle_name(self, circle_id):
         con = settings().connect()
-        sql = f"select circle_name from circle_list where circle_id = {circle_id}"
+        sql = f"select * from circle_list where circle_id = {circle_id}"
 
         with con.cursor(cursor_factory=DictCursor) as cur:
             cur.execute(sql)
-            circle_name = cur.fetchone()[0]
-        return circle_name
+            results = cur.fetchall()
+            answer_dict = []
+            for row in results:
+                answer_dict.append(dict(row))
+
+        return answer_dict
 
 
 if __name__ == '__main__':
     instance = QuestionDAO()
     result = instance.get_circle_name(3)
-    print(result)
+    print(type(result))

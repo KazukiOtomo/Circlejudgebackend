@@ -54,29 +54,34 @@ class QuestionService:
             #     print("false")
 
         # 元の得点リスト
-        print(pointList)
+        # print(pointList)
         point_array = numpy.array(pointList)
         sort_point_array = numpy.sort(point_array)[::-1]
 
         # ソート後の得点リスト
-        print(sort_point_array)
-        sort_point_array = numpy.argsort(point_array)[::-1]
+        # print(sort_point_array)
+        sort_point_index_array = numpy.argsort(point_array)[::-1]
 
         # ソート前におけるインデックス番号
-        print(sort_point_array)
-
-        # とりあえずTOP3の出力
-        first = instance.get_circle_name(sort_point_array[0])
-        second = instance.get_circle_name(sort_point_array[1])
-        third = instance.get_circle_name(sort_point_array[2])
+        # print(sort_point_index_array)
 
         # result(main.py)に返す値(list)
         result_circle_list = []
-        for index in sort_point_array:
-            result_circle_list.append({'name': instance.get_circle_name(sort_point_array[index])})
+
+        counter = 0
+        for index in sort_point_index_array:
+            result = instance.get_circle_name(index)
+            result[0]['percent'] = sort_point_array[counter]
+
+            #FIXME:テスト出力
+            print(result)
+
+            result_circle_list.append(result)
+            counter += 1
         return result_circle_list
 
 
 if __name__ == "__main__":
     instance = QuestionService()
-    instance.calc_point('176ae382-e61c-41db-bc0a-e0233921bc80')
+    result = instance.calc_point('176ae382-e61c-41db-bc0a-e0233921bc80')
+    print(result)
