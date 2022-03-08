@@ -2,7 +2,6 @@ from flask import Flask, jsonify, make_response, request, render_template, redir
 from flask_cors import CORS
 
 from Repository.QuestionDAO import QuestionDAO
-from Repository.AdminUserDAO import AdminUserDAO
 
 from Service.QuestionService import QuestionService
 
