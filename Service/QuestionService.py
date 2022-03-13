@@ -74,9 +74,9 @@ class QuestionService:
             result[0]['percent'] = sort_point_array[counter]
 
             #FIXME:テスト出力
-            print(result)
+            print(result[0])
 
-            result_circle_list.append(result)
+            result_circle_list.append(result[0])
             counter += 1
         return result_circle_list
 
