@@ -83,7 +83,15 @@ def result():
 
     instance = QuestionService()
     result_circle_list = instance.calc_point(game_id)
-    return jsonify({'ranking': result_circle_list})
+    if type(result_circle_list) == list:
+        # 正常時
+        return jsonify({'ranking': result_circle_list})
+    elif type(result_circle_list) == str:
+        # 異常時
+        # 回答が完了していない
+        # 回答に誤りがある 
+        # 不正なgame_idである
+        return jsonify({"message": result_circle_list})
 
 
 @app.route('/end', methods=['GET', 'POST'])
