@@ -16,10 +16,30 @@ class QuestionService:
         print("")
 
     """
+     - 回答が完了しているか　回答に誤りがないか
+     - 不正なgame_idでないか
+    を確認する
+    """
+    def __check_answer_list(self, game_id):
+        instance = QuestionDAO()
+        answered_dict = instance.find_answer(game_id)
+        all_answer_dict = instance.get_question_all()
+        if len(answered_dict) < len(all_answer_dict):
+            return "回答データが不足しています"
+        elif len(answered_dict) > len(all_answer_dict):
+            return "回答データが多いです"
+        else:
+            return "OK"
+
+    """
     DAOクラスの物を切り分け
     """
 
     def calc_point(self, game_id):
+        # 回答状況を確認(回答に不備があれば、例外を投げる)
+        res = self.__check_answer_list(game_id)
+        if res != "OK":
+            return res
         instance = QuestionDAO()
         numberOfCircleInstance = instance.get_number_of_circles()
         numberOfCircleList = numberOfCircleInstance.pop(0)

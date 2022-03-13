@@ -69,6 +69,19 @@ class QuestionDAO:
                 question_dict.append(dict(row))
 
         return question_dict
+    
+    def get_question_all(self):
+        con = settings().connect()
+        sql = f"SELECT * FROM question_list"
+
+        with con.cursor(cursor_factory=DictCursor) as cur:
+            cur.execute(sql)
+            results = cur.fetchall()
+            question_dict = []
+            for row in results:
+                question_dict.append(dict(row))
+
+        return question_dict
 
     """
     引数の　game_idから、answer_tableの内容を検索してソートした後に、辞書型に変換して返す（find_questionを参考にどうぞ）
