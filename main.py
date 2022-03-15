@@ -32,11 +32,10 @@ def question():
 
     body = request.json
     game_id = body['game_id']
-
-    if not game_id:
-        return make_response('auth error', 400)
     question_id = body['question_id']
     instance = QuestionDAO()
+    if instance.invalid_game_id(game_id):
+        return make_response('auth error', 400)
     response = instance.find_question(question_id)
     return jsonify(response)
 
@@ -48,15 +47,15 @@ def question_answer():
 
     body = request.json
     game_id = body['game_id']
-
-    if not game_id:
-        return make_response('auth error', 400)
     question_id = body['question_id']
     result = body['result']
 
     if result not in [0, 1]:
         return make_response('"result" is 0 or 1.', 401)
     instance = QuestionDAO()
+
+    if instance.invalid_game_id(game_id):
+        return make_response('auth error', 400)
 
     # question_id を確認する
     flag = instance.find_question(question_id)
@@ -78,10 +77,10 @@ def result():
     body = request.json
     game_id = body['game_id']
 
-    if not game_id:
-        return make_response('auth error', 401)
-
     instance = QuestionService()
+
+    if QuestionDAO().invalid_game_id(game_id):
+        return make_response('auth error', 400)
     result_circle_list = instance.calc_point(game_id)
     if type(result_circle_list) == list:
         # 正常時
@@ -100,9 +99,9 @@ def end():
         return make_response('', 400)
     body = request.json
     game_id = body['game_id']
-    if not game_id:
-        return make_response('auth error', 400)
     instance = QuestionDAO()
+    if instance.invalid_game_id(game_id):
+        return make_response('auth error', 400)
     try:
         response = instance.deleat_gameid(game_id)
         return jsonify({'message': 'OK'})

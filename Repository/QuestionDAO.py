@@ -39,6 +39,27 @@ class QuestionDAO:
         return game_id
 
     """
+    game_idが不正でないかを確認する
+    @:return bool
+    @:済
+    """
+
+    def invalid_game_id(game_id):
+        con = settings().connect()
+        sql = f"select count (game_id) from answer_table where game_id = '{game_id}'"
+
+        with con.cursor() as cur:
+            con.cursor().execute(sql)
+            try:
+                cur.fetchone()
+                # game_id が存在している(正常)
+                return False
+            except psycopg2.ProgrammingError:
+                # game_id が存在していない(不正なgame_id)
+                return True
+    
+
+    """
     回答内容INSERTメソッド
     @:済
     """
