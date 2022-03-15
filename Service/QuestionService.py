@@ -90,7 +90,7 @@ class QuestionService:
 
         counter = 0
         for index in sort_point_index_array:
-            result = instance.get_circle_name(index)
+            result = instance.get_circle_name(index + 1)
             result[0]['percent'] = sort_point_array[counter]
 
             #FIXME:テスト出力
@@ -98,6 +98,7 @@ class QuestionService:
 
             result_circle_list.append(result[0])
             counter += 1
+        print(result_circle_list)
         return result_circle_list
 
 
